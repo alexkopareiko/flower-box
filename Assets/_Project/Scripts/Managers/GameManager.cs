@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using MaskTransitions;
 
 namespace Game
 {
@@ -9,8 +7,13 @@ namespace Game
         public static GameManager Instance => s_Instance;
         private static GameManager s_Instance;
 
+        //references to other managers/components
+        private TableGrid _tableGrid;
+
         private static bool _isPaused = false;
-        internal static bool isPaused;
+        internal static bool isPaused => _isPaused;
+
+        public TableGrid TableGrid => _tableGrid;
 
         private void OnEnable()
         {
@@ -39,7 +42,7 @@ namespace Game
         public void Load()
         {
             CollectReferences();
-
+            _tableGrid.Initialize();
             // Initialize components
         }
 
@@ -85,9 +88,9 @@ namespace Game
         }
 
 
-        void CollectReferences()
+        private void CollectReferences()
         {
-            // _comp = FindFirstObjectByType<Comp>();
+            _tableGrid = FindFirstObjectByType<TableGrid>();
         }
     }
 }
