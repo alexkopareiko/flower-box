@@ -6,26 +6,36 @@ namespace Game
     public class TableGrid : MonoBehaviour
     {
         [SerializeField] private List<TableCell> _cells = new List<TableCell>();
+        [SerializeField, Min(1)] private int _columns = 5;
 
         public List<TableCell> Cells => _cells;
 
         public void Initialize()
         {
+            Debug.Log("TableGrid Initialize");
             SetupCoordsForCells();
         }
 
         private void SetupCoordsForCells()
         {
-            for (int x = 0; x < _cells.Count; x++)
+            Debug.Log("SetupCoordsForCells");
+            int columns = Mathf.Max(1, _columns);
+            int rows = Mathf.CeilToInt(_cells.Count / (float)columns);
+
+            for (int index = 0; index < _cells.Count; index++)
             {
-                for (int y = 0; y < _cells.Count; y++)
+                int x = index % columns;
+                int y = index / columns;
+
+                Debug.Log($"Setting up cell at: {x}, {y}");
+                TableCell cell = _cells[index];
+                if (cell == null)
                 {
-                    TableCell cell = _cells[y * _cells.Count + x];
-                    if (cell != null)
-                    {
-                        cell.name = $"Cell ({x}, {y})";
-                    }
+                    continue;
                 }
+
+                cell.name = $"Cell ({x}, {y})";
+                cell.SetGridPosition(x, y);
             }
         }
     }

@@ -15,5 +15,10 @@ namespace Game
         {
             _content = content;
         }
+
+        public void SetGridPosition(int x, int y)
+        {
+            _gridPosition = new Vector2Int(x, y);
+        }
     }
 }

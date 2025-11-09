@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 4014267}
   - component: {fileID: 4014269}
   - component: {fileID: 4014268}
+  - component: {fileID: 4014270}
   m_Layer: 5
   m_Name: Image (12)
   m_TagString: Untagged
@@ -194,6 +195,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4014266}
   m_CullTransparentMesh: 1
+--- !u!114 &4014270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4014266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &66265499
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +332,7 @@ GameObject:
   - component: {fileID: 93308688}
   - component: {fileID: 93308690}
   - component: {fileID: 93308689}
+  - component: {fileID: 93308691}
   m_Layer: 5
   m_Name: Image (11)
   m_TagString: Untagged
@@ -382,6 +397,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 93308687}
   m_CullTransparentMesh: 1
+--- !u!114 &93308691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93308687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &93595725
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,6 +421,7 @@ GameObject:
   - component: {fileID: 93595726}
   - component: {fileID: 93595728}
   - component: {fileID: 93595727}
+  - component: {fileID: 93595729}
   m_Layer: 5
   m_Name: Image (5)
   m_TagString: Untagged
@@ -457,6 +486,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 93595725}
   m_CullTransparentMesh: 1
+--- !u!114 &93595729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93595725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &185903668
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,6 +510,7 @@ GameObject:
   - component: {fileID: 185903669}
   - component: {fileID: 185903671}
   - component: {fileID: 185903670}
+  - component: {fileID: 185903672}
   m_Layer: 5
   m_Name: Image (8)
   m_TagString: Untagged
@@ -532,6 +575,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 185903668}
   m_CullTransparentMesh: 1
+--- !u!114 &185903672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185903668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &269240611
 GameObject:
   m_ObjectHideFlags: 0
@@ -882,8 +938,8 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
-  orthographic: 1
+  field of view: 75.8
+  orthographic: 0
   orthographic size: 1.35
   m_Depth: -1
   m_CullingMask:
@@ -909,7 +965,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5146566, y: 0, z: 0, w: 0.8573964}
-  m_LocalPosition: {x: 0, y: 1.8, z: -0.97}
+  m_LocalPosition: {x: 0, y: 1.82, z: -0.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1757,6 +1813,7 @@ GameObject:
   - component: {fileID: 504211164}
   - component: {fileID: 504211166}
   - component: {fileID: 504211165}
+  - component: {fileID: 504211167}
   m_Layer: 5
   m_Name: Image (3)
   m_TagString: Untagged
@@ -1821,6 +1878,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 504211163}
   m_CullTransparentMesh: 1
+--- !u!114 &504211167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504211163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &532218737
 GameObject:
   m_ObjectHideFlags: 0
@@ -2214,6 +2284,50 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674980987}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &710989288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 710989290}
+  - component: {fileID: 710989289}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &710989289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710989288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdc8281ab6eebc4ca88b10aeee80c11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.GameManager
+--- !u!4 &710989290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 710989288}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &729774017
 GameObject:
   m_ObjectHideFlags: 0
@@ -2225,6 +2339,7 @@ GameObject:
   - component: {fileID: 729774018}
   - component: {fileID: 729774020}
   - component: {fileID: 729774019}
+  - component: {fileID: 729774021}
   m_Layer: 5
   m_Name: Image (4)
   m_TagString: Untagged
@@ -2289,6 +2404,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 729774017}
   m_CullTransparentMesh: 1
+--- !u!114 &729774021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729774017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &730317327
 GameObject:
   m_ObjectHideFlags: 0
@@ -2300,6 +2428,7 @@ GameObject:
   - component: {fileID: 730317328}
   - component: {fileID: 730317330}
   - component: {fileID: 730317329}
+  - component: {fileID: 730317331}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -2364,6 +2493,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 730317327}
   m_CullTransparentMesh: 1
+--- !u!114 &730317331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730317327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &731716419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2629,6 +2771,7 @@ GameObject:
   - component: {fileID: 782373548}
   - component: {fileID: 782373550}
   - component: {fileID: 782373549}
+  - component: {fileID: 782373551}
   m_Layer: 5
   m_Name: Image (13)
   m_TagString: Untagged
@@ -2693,6 +2836,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782373547}
   m_CullTransparentMesh: 1
+--- !u!114 &782373551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782373547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -3793,6 +3949,7 @@ GameObject:
   - component: {fileID: 1123228982}
   - component: {fileID: 1123228984}
   - component: {fileID: 1123228983}
+  - component: {fileID: 1123228985}
   m_Layer: 5
   m_Name: Image (14)
   m_TagString: Untagged
@@ -3857,6 +4014,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123228981}
   m_CullTransparentMesh: 1
+--- !u!114 &1123228985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123228981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &1155589749
 GameObject:
   m_ObjectHideFlags: 0
@@ -4645,6 +4815,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1282135972}
+  - component: {fileID: 1282135973}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -4669,6 +4840,34 @@ Transform:
   - {fileID: 1416942477}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1282135973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282135971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0629ba92ea1b3743aa8176ad3f88407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableGrid
+  _cells:
+  - {fileID: 730317331}
+  - {fileID: 2073457607}
+  - {fileID: 1600450086}
+  - {fileID: 504211167}
+  - {fileID: 729774021}
+  - {fileID: 93595729}
+  - {fileID: 1425193823}
+  - {fileID: 1884857322}
+  - {fileID: 185903672}
+  - {fileID: 1631981114}
+  - {fileID: 1599043650}
+  - {fileID: 93308691}
+  - {fileID: 4014270}
+  - {fileID: 782373551}
+  - {fileID: 1123228985}
 --- !u!1 &1324830304
 GameObject:
   m_ObjectHideFlags: 0
@@ -5157,6 +5356,7 @@ GameObject:
   - component: {fileID: 1425193820}
   - component: {fileID: 1425193822}
   - component: {fileID: 1425193821}
+  - component: {fileID: 1425193823}
   m_Layer: 5
   m_Name: Image (6)
   m_TagString: Untagged
@@ -5221,6 +5421,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425193819}
   m_CullTransparentMesh: 1
+--- !u!114 &1425193823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425193819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &1489998554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5700,7 +5913,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.4676, y: 0.16648, z: 2}
+  m_LocalScale: {x: 4.6501923, y: 0.16648, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 318212455}
@@ -5830,6 +6043,7 @@ GameObject:
   - component: {fileID: 1599043647}
   - component: {fileID: 1599043649}
   - component: {fileID: 1599043648}
+  - component: {fileID: 1599043650}
   m_Layer: 5
   m_Name: Image (10)
   m_TagString: Untagged
@@ -5894,6 +6108,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599043646}
   m_CullTransparentMesh: 1
+--- !u!114 &1599043650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599043646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &1600450082
 GameObject:
   m_ObjectHideFlags: 0
@@ -5905,6 +6132,7 @@ GameObject:
   - component: {fileID: 1600450083}
   - component: {fileID: 1600450085}
   - component: {fileID: 1600450084}
+  - component: {fileID: 1600450086}
   m_Layer: 5
   m_Name: Image (2)
   m_TagString: Untagged
@@ -5969,6 +6197,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1600450082}
   m_CullTransparentMesh: 1
+--- !u!114 &1600450086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600450082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &1604587780
 GameObject:
   m_ObjectHideFlags: 0
@@ -6128,6 +6369,7 @@ GameObject:
   - component: {fileID: 1631981111}
   - component: {fileID: 1631981113}
   - component: {fileID: 1631981112}
+  - component: {fileID: 1631981114}
   m_Layer: 5
   m_Name: Image (9)
   m_TagString: Untagged
@@ -6192,6 +6434,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631981110}
   m_CullTransparentMesh: 1
+--- !u!114 &1631981114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631981110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1001 &1671191429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6480,6 +6735,7 @@ GameObject:
   - component: {fileID: 1884857319}
   - component: {fileID: 1884857321}
   - component: {fileID: 1884857320}
+  - component: {fileID: 1884857322}
   m_Layer: 5
   m_Name: Image (7)
   m_TagString: Untagged
@@ -6544,6 +6800,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1884857318}
   m_CullTransparentMesh: 1
+--- !u!114 &1884857322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884857318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1 &1921528232
 GameObject:
   m_ObjectHideFlags: 0
@@ -7037,6 +7306,7 @@ GameObject:
   - component: {fileID: 2073457604}
   - component: {fileID: 2073457606}
   - component: {fileID: 2073457605}
+  - component: {fileID: 2073457607}
   m_Layer: 5
   m_Name: Image (1)
   m_TagString: Untagged
@@ -7101,6 +7371,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2073457603}
   m_CullTransparentMesh: 1
+--- !u!114 &2073457607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073457603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c7db1741383ed4baf5c2c83004405e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.TableCell
+  _content: {fileID: 0}
 --- !u!1001 &4700084235866129355
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7279,3 +7562,4 @@ SceneRoots:
   - {fileID: 336136112}
   - {fileID: 406040725}
   - {fileID: 663204909}
+  - {fileID: 710989290}
