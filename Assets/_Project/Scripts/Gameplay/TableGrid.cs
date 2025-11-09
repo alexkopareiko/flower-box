@@ -12,13 +12,11 @@ namespace Game
 
         public void Initialize()
         {
-            Debug.Log("TableGrid Initialize");
             SetupCoordsForCells();
         }
 
         private void SetupCoordsForCells()
         {
-            Debug.Log("SetupCoordsForCells");
             int columns = Mathf.Max(1, _columns);
             int rows = Mathf.CeilToInt(_cells.Count / (float)columns);
 
@@ -27,7 +25,6 @@ namespace Game
                 int x = index % columns;
                 int y = index / columns;
 
-                Debug.Log($"Setting up cell at: {x}, {y}");
                 TableCell cell = _cells[index];
                 if (cell == null)
                 {
