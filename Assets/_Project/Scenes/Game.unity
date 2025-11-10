@@ -1029,6 +1029,7 @@ GameObject:
   m_Component:
   - component: {fileID: 336136112}
   - component: {fileID: 336136113}
+  - component: {fileID: 336136114}
   m_Layer: 0
   m_Name: Radio
   m_TagString: Untagged
@@ -1076,6 +1077,29 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.69, y: 0.37, z: 0.48}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &336136114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336136111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8821ecaafaa9724586e90354a2bb3e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.PickableItem
+  _cameraOverride: {fileID: 0}
+  _placementMask:
+    serializedVersion: 2
+    m_Bits: 51
+  _maxRayDistance: 100
+  _blockWhenPointerOverUI: 1
+  _hoverHeight: 0.15
+  _followSpeed: 20
+  _dragParent: {fileID: 0}
+  _rigidbody: {fileID: 0}
+  _lockRigidbodyWhenPlaced: 1
 --- !u!1 &406040722
 GameObject:
   m_ObjectHideFlags: 0
