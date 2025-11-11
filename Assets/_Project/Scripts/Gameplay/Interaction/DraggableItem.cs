@@ -1,4 +1,7 @@
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace Game
 {
@@ -122,7 +125,8 @@ namespace Game
             Camera camera = pickable.InteractionCamera;
             if (camera != null)
             {
-                Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+                Vector2 pointer = GetPointerPosition();
+                Ray ray = camera.ScreenPointToRay(new Vector3(pointer.x, pointer.y, 0f));
                 if (Physics.Raycast(ray, out RaycastHit hit, 200f, _cellMask, QueryTriggerInteraction.Ignore))
                 {
                     cell = hit.collider.GetComponentInParent<TableCell>();
@@ -162,6 +166,15 @@ namespace Game
             }
 
             grid.TryPlace(_committedCell, gameObject);
+        }
+
+        private Vector2 GetPointerPosition()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current?.position.ReadValue() ?? Vector2.zero;
+#else
+            return Input.mousePosition;
+#endif
         }
     }
 }
