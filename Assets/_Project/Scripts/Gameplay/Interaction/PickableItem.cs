@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 namespace Game
 {
@@ -9,13 +12,17 @@ namespace Game
     /// Attach this component to any world object with a collider to make it pickable.
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class PickableItem : MonoBehaviour
+    public class PickableItem : MonoBehaviour, IPointerDownHandler
     {
         [Header("Pointer")]
         [SerializeField] private Camera _cameraOverride;
         [SerializeField] private LayerMask _placementMask = Physics.DefaultRaycastLayers;
         [SerializeField, Min(0.01f)] private float _maxRayDistance = 100f;
         [SerializeField] private bool _blockWhenPointerOverUI = true;
+
+        [Header("Grounding")]
+        [SerializeField, Min(0.01f)] private float _groundProbeHeight = 0.5f;
+        [SerializeField, Min(0.01f)] private float _groundProbeExtraDistance = 1.5f;
 
         [Header("Movement")]
         [SerializeField, Min(0.01f)] private float _hoverHeight = 0.15f;
@@ -41,6 +48,7 @@ namespace Game
         private Quaternion _restingRotation;
         private Transform _restingParent;
         private TableCell _restingCell;
+        private bool _lockRestingState = true;
 
         private Transform _parentBeforeDrag;
 
@@ -78,24 +86,24 @@ namespace Game
             UpdateHoverPoint();
             FollowPointer();
 
-            if (Input.GetMouseButtonUp(0))
+            if (WasLeftPointerReleasedThisFrame())
             {
                 EndPickup();
             }
-            else if (Input.GetMouseButtonDown(1))
+            else if (WasRightPointerPressedThisFrame())
             {
                 CancelPickup();
             }
         }
 
-        private void OnMouseDown()
+        public void OnPointerDown(PointerEventData eventData)
         {
             if (!enabled || !gameObject.activeInHierarchy)
             {
                 return;
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (eventData.button == PointerEventData.InputButton.Left)
             {
                 BeginPickup();
             }
@@ -107,12 +115,10 @@ namespace Game
             {
                 return;
             }
-
             if (_blockWhenPointerOverUI && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
                 return;
             }
-
             ResolveCamera();
             _isHeld = true;
             _dropHandled = false;
@@ -144,7 +150,7 @@ namespace Game
 
             if (!_dropHandled)
             {
-                CacheRestingState(null);
+                CacheRestingState(null, false);
             }
         }
 
@@ -165,12 +171,19 @@ namespace Game
             CancelRequested?.Invoke(this);
         }
 
-        public void CacheRestingState(TableCell cell)
+        public void CacheRestingState(TableCell cell, bool lockRigidbody = true)
         {
-            _restingPosition = transform.position;
+            Vector3 restingPosition = transform.position;
+            if (cell == null && TryGetGroundPoint(restingPosition, out Vector3 groundedPosition))
+            {
+                restingPosition = groundedPosition;
+            }
+
+            _restingPosition = restingPosition;
             _restingRotation = transform.rotation;
             _restingParent = transform.parent;
             _restingCell = cell;
+            _lockRestingState = lockRigidbody;
             _dropHandled = true;
             ApplyPhysicsState(false);
         }
@@ -178,7 +191,15 @@ namespace Game
         public void RestoreRestingState()
         {
             transform.SetParent(_restingParent);
-            transform.SetPositionAndRotation(_restingPosition, _restingRotation);
+            Vector3 targetPosition = _restingPosition;
+            if (_restingCell == null && TryGetGroundPoint(_restingPosition, out Vector3 groundedPosition))
+            {
+                targetPosition = groundedPosition;
+                _restingPosition = groundedPosition;
+            }
+
+            transform.SetPositionAndRotation(targetPosition, _restingRotation);
+            _lockRestingState = true;
             ApplyPhysicsState(false);
             _dropHandled = true;
         }
@@ -201,7 +222,8 @@ namespace Game
                 return;
             }
 
-            Ray ray = _runtimeCamera.ScreenPointToRay(Input.mousePosition);
+            Vector2 pointerPosition = GetPointerPosition();
+            Ray ray = _runtimeCamera.ScreenPointToRay(new Vector3(pointerPosition.x, pointerPosition.y, 0f));
             if (Physics.Raycast(ray, out _lastHit, _maxRayDistance, _placementMask, QueryTriggerInteraction.Ignore))
             {
                 _currentHoverPoint = _lastHit.point;
@@ -224,12 +246,18 @@ namespace Game
                 return;
             }
 
-            if (isHeld || _lockRigidbodyWhenPlaced)
+            bool shouldLockBody = isHeld || (_lockRigidbodyWhenPlaced && _lockRestingState);
+
+            if (shouldLockBody)
             {
+                if (!_rigidbody.isKinematic)
+                {
+                    _rigidbody.linearVelocity = Vector3.zero;
+                    _rigidbody.angularVelocity = Vector3.zero;
+                }
+
                 _rigidbody.isKinematic = true;
                 _rigidbody.useGravity = false;
-                _rigidbody.linearVelocity = Vector3.zero;
-                _rigidbody.angularVelocity = Vector3.zero;
             }
             else
             {
@@ -248,6 +276,47 @@ namespace Game
             {
                 _runtimeCamera = Camera.main;
             }
+        }
+
+        private Vector2 GetPointerPosition()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current?.position.ReadValue() ?? Vector2.zero;
+#else
+            return Input.mousePosition;
+#endif
+        }
+
+        private bool WasLeftPointerReleasedThisFrame()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current != null && Mouse.current.leftButton.wasReleasedThisFrame;
+#else
+            return Input.GetMouseButtonUp(0);
+#endif
+        }
+
+        private bool WasRightPointerPressedThisFrame()
+        {
+#if ENABLE_INPUT_SYSTEM
+            return Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame;
+#else
+            return Input.GetMouseButtonDown(1);
+#endif
+        }
+
+        private bool TryGetGroundPoint(Vector3 referencePosition, out Vector3 groundedPosition)
+        {
+            Vector3 origin = referencePosition + Vector3.up * _groundProbeHeight;
+            float maxDistance = _groundProbeHeight + _groundProbeExtraDistance;
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, maxDistance, _placementMask, QueryTriggerInteraction.Ignore))
+            {
+                groundedPosition = hit.point;
+                return true;
+            }
+
+            groundedPosition = referencePosition;
+            return false;
         }
     }
 }
