@@ -19,6 +19,10 @@ namespace Game {
         [SerializeField] private GameObject _joystick;
         [SerializeField] private GameObject _button;
         [SerializeField] private float _buttonPressDepth = 0.01f;
+        [SerializeField] private TableGrid _gridOverride;
+        [SerializeField, Range(0.05f, 0.9f)] private float _joystickDeadZone = 0.35f;
+        [SerializeField] private float _joystickTiltAngle = 12f;
+        [SerializeField] private float _joystickTiltSpeed = 12f;
 
         [Header("Flicker Settings")]
         [SerializeField] private SpotAngle _spotAngleMode1;
@@ -32,8 +36,30 @@ namespace Game {
         private TableCell _currentCell;
         private Vector3 _buttonDefaultLocalPos;
         private bool _buttonHeld;
+        private bool _joystickEngaged;
+        private Quaternion _joystickDefaultLocalRotation = Quaternion.identity;
+        private TableGrid _gridCache;
         public int LampState => lampState;
         public TableCell CurrentCell => _currentCell;
+        private Transform LampTransform => _lightParent != null ? _lightParent.transform : transform;
+        private GameObject LampContent => _lightParent != null ? _lightParent : gameObject;
+        private TableGrid Grid
+        {
+            get
+            {
+                if (_gridOverride != null)
+                {
+                    return _gridOverride;
+                }
+
+                if (_gridCache == null && GameManager.Instance != null)
+                {
+                    _gridCache = GameManager.Instance.TableGrid;
+                }
+
+                return _gridCache;
+            }
+        }
 
         private void Start()
         {
@@ -42,6 +68,9 @@ namespace Game {
             {
                 _buttonDefaultLocalPos = _button.transform.localPosition;
             }
+
+            CacheJoystickDefaults();
+            SnapToCurrentCell();
         }
 
         private void OnValidate()
@@ -52,25 +81,25 @@ namespace Game {
             {
                 _buttonDefaultLocalPos = _button.transform.localPosition;
             }
+
+            CacheJoystickDefaults();
         }
 
         private void Update()
         {
 #if ENABLE_INPUT_SYSTEM
             var mouse = Mouse.current;
-            if (mouse == null)
+            if (mouse != null)
             {
-                return;
-            }
+                if (mouse.leftButton.wasPressedThisFrame)
+                {
+                    TryHandleButtonPress(mouse.position.ReadValue());
+                }
 
-            if (mouse.leftButton.wasPressedThisFrame)
-            {
-                TryHandleButtonPress(mouse.position.ReadValue());
-            }
-
-            if (_buttonHeld && mouse.leftButton.wasReleasedThisFrame)
-            {
-                ReleaseButton();
+                if (_buttonHeld && mouse.leftButton.wasReleasedThisFrame)
+                {
+                    ReleaseButton();
+                }
             }
 #else
             if (Input.GetMouseButtonDown(0))
@@ -83,6 +112,8 @@ namespace Game {
                 ReleaseButton();
             }
 #endif
+
+            HandleJoystickInput();
         }
 
         public void SetLampState(int state)
@@ -168,5 +199,188 @@ namespace Game {
             _button.transform.localPosition = _buttonDefaultLocalPos;
         }
 
+        private void HandleJoystickInput()
+        {
+            Vector2 input = ReadMovementInput();
+            UpdateJoystickVisual(input);
+            if (input.sqrMagnitude < _joystickDeadZone * _joystickDeadZone)
+            {
+                _joystickEngaged = false;
+                return;
+            }
+            if (_joystickEngaged)
+            {
+                return;
+            }
+
+            Vector2Int direction;
+            if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
+            {
+                direction = input.x > 0f ? Vector2Int.right : Vector2Int.left;
+            }
+            else
+            {
+                direction = input.y > 0f ? Vector2Int.up : Vector2Int.down;
+            }
+
+            if (TryMove(direction))
+            {
+                _joystickEngaged = true;
+            }
+        }
+
+        private Vector2 ReadMovementInput()
+        {
+#if ENABLE_INPUT_SYSTEM
+            Vector2 input = Vector2.zero;
+
+            Gamepad pad = Gamepad.current;
+            if (pad != null)
+            {
+                input = pad.leftStick.ReadValue();
+                if (input.sqrMagnitude > 0f)
+                {
+                    return Vector2.ClampMagnitude(input, 1f);
+                }
+            }
+
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null)
+            {
+                float x = 0f;
+                if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed)
+                {
+                    x -= 1f;
+                }
+
+                if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed)
+                {
+                    x += 1f;
+                }
+
+                float y = 0f;
+                if (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed)
+                {
+                    y -= 1f;
+                }
+
+                if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed)
+                {
+                    y += 1f;
+                }
+
+                input = new Vector2(x, -y);
+            }
+
+            return Vector2.ClampMagnitude(input, 1f);
+#else
+            float x = Input.GetAxisRaw("Horizontal");
+            float y = Input.GetAxisRaw("Vertical");
+            return new Vector2(x, y);
+#endif
+        }
+
+        private void UpdateJoystickVisual(Vector2 input)
+        {
+            if (_joystick == null)
+            {
+                return;
+            }
+
+            Quaternion targetRotation;
+            if (input.sqrMagnitude < Mathf.Epsilon)
+            {
+                targetRotation = _joystickDefaultLocalRotation;
+            }
+            else
+            {
+                float tiltX = -input.y * _joystickTiltAngle;
+                float tiltZ = -input.x * _joystickTiltAngle;
+                targetRotation = _joystickDefaultLocalRotation * Quaternion.Euler(tiltX, 0f, tiltZ);
+            }
+
+            _joystick.transform.localRotation = Quaternion.Slerp(
+                _joystick.transform.localRotation,
+                targetRotation,
+                Time.deltaTime * _joystickTiltSpeed);
+        }
+
+        private bool TryMove(Vector2Int direction)
+        {
+            TableGrid grid = Grid;
+
+            if (_currentCell == null)
+                _currentCell = Grid.Cells[0];
+
+            if (grid == null || _currentCell == null)
+            {
+                return false;
+            }
+
+            Vector2Int targetCoords = _currentCell.GridPosition + direction;
+            if (!grid.TryGetCell(targetCoords, out TableCell targetCell))
+            {
+                return false;
+            }
+
+            if (targetCell.Content != null && targetCell.Content != LampContent)
+            {
+                return false;
+            }
+
+            if (!grid.TryPlace(targetCell, LampContent))
+            {
+                return false;
+            }
+
+            TableCell previousCell = _currentCell;
+            _currentCell = targetCell;
+            if (previousCell != null && previousCell != targetCell)
+            {
+                grid.Clear(previousCell, LampContent);
+            }
+
+            MoveLampToCell(targetCell);
+            return true;
+        }
+
+        private void MoveLampToCell(TableCell cell)
+        {
+            Transform targetTransform = LampTransform;
+            if (cell == null || targetTransform == null)
+            {
+                return;
+            }
+
+            targetTransform.position = cell.GetSnapPosition();
+        }
+
+        private void SnapToCurrentCell()
+        {
+            if (_currentCell == null)
+            {
+                return;
+            }
+
+            TableGrid grid = Grid;
+            if (grid != null)
+            {
+                grid.TryPlace(_currentCell, LampContent);
+            }
+            else if (_currentCell.Content != LampContent)
+            {
+                _currentCell.TrySetContent(LampContent);
+            }
+
+            MoveLampToCell(_currentCell);
+        }
+
+        private void CacheJoystickDefaults()
+        {
+            if (_joystick != null)
+            {
+                _joystickDefaultLocalRotation = _joystick.transform.localRotation;
+            }
+        }
     }
 }
