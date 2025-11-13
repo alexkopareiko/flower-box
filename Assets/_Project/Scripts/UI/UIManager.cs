@@ -18,11 +18,14 @@ namespace Game
         [SerializeField] private AudioClip _startClip;
 
         private List<UISubCanvas> _canvases = new List<UISubCanvas>();
+        private bool _isInitialized = false;
 
         public PlayCanvas PlayCanvas => _playCanvas as PlayCanvas;
         public DieCanvas DieCanvas => _dieCanvas as DieCanvas;
         public UISubCanvas WinCanvas => _winCanvas;
         public UISubCanvas SettingsCanvas => _settingsCanvas;
+
+        public bool IsLoaded => _isInitialized;
 
         private void OnEnable()
         {
@@ -80,6 +83,8 @@ namespace Game
             GameManager.Pause(false);
 
             ShowPlayCanvas();
+
+            _isInitialized = true;
         }
     }
 
