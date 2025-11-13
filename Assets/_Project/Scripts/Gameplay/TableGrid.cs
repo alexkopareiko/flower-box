@@ -3,13 +3,17 @@ using UnityEngine;
 
 namespace Game
 {
-    public class TableGrid : MonoBehaviour
+    public class TableGrid : MonoBehaviour, IGameModule
     {
         [SerializeField] private List<TableCell> _cells = new List<TableCell>();
         [SerializeField, Min(1)] private int _columns = 5;
 
         public List<TableCell> Cells => _cells;
+
+        public bool IsLoaded => _isInitialized;
+
         private readonly Dictionary<Vector2Int, TableCell> _lookup = new Dictionary<Vector2Int, TableCell>();
+        private bool _isInitialized = false;
 
         public bool TryGetCell(Vector2Int coordinates, out TableCell cell) => _lookup.TryGetValue(coordinates, out cell);
 
@@ -17,6 +21,7 @@ namespace Game
         {
             _lookup.Clear();
             SetupCoordsForCells();
+            _isInitialized = true;
         }
 
         private void SetupCoordsForCells()
@@ -81,6 +86,11 @@ namespace Game
             {
                 storedCell.ClearContent(content);
             }
+        }
+
+        public void Load()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 #endif
 
 namespace Game {
-    public class Lamp : MonoBehaviour
+    public class Lamp : MonoBehaviour, IGameModule
     {
         [System.Serializable]
         public struct SpotAngle
@@ -42,6 +42,7 @@ namespace Game {
         private TableGrid _gridCache;
         private bool _hasInitializedPlacement;
         private readonly List<TableCell> _coveredCells = new List<TableCell>();
+        private bool _isInitialized = false;
 
         public int LampState => lampState;
         public TableCell CurrentCell => _currentCell;
@@ -66,7 +67,9 @@ namespace Game {
             }
         }
 
-        private void Start()
+        public bool IsLoaded => _isInitialized;
+
+        public void Initialize()
         {
             UpdateLamp();
             if (_button != null)
@@ -76,6 +79,8 @@ namespace Game {
 
             CacheJoystickDefaults();
             SnapToCurrentCell();
+
+            _isInitialized = true;
         }
 
         private void OnValidate()
@@ -92,6 +97,9 @@ namespace Game {
 
         private void Update()
         {
+            if (_isInitialized == false)
+                return;
+
             if (!_hasInitializedPlacement && lampState > 0)
             {
                 InitializeInitialPlacement();
@@ -479,5 +487,11 @@ namespace Game {
 
             _coveredCells.Add(cell);
         }
+
+        public void Load()
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 }

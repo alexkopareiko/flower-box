@@ -9,11 +9,13 @@ namespace Game
 
         //references to other managers/components
         private TableGrid _tableGrid;
+        private Lamp _lamp;
 
         private static bool _isPaused = false;
         internal static bool isPaused => _isPaused;
 
         public TableGrid TableGrid => _tableGrid;
+        public Lamp Lamp => _lamp;
 
         private void OnEnable()
         {
@@ -43,6 +45,7 @@ namespace Game
         {
             CollectReferences();
             _tableGrid.Initialize();
+            _lamp.Initialize();
             // Initialize components
         }
 
@@ -91,6 +94,7 @@ namespace Game
         private void CollectReferences()
         {
             _tableGrid = FindFirstObjectByType<TableGrid>();
+            _lamp = FindFirstObjectByType<Lamp>();
         }
     }
 }
