@@ -39,6 +39,7 @@ namespace Game {
         private bool _joystickEngaged;
         private Quaternion _joystickDefaultLocalRotation = Quaternion.identity;
         private TableGrid _gridCache;
+        private bool _hasInitializedPlacement;
         public int LampState => lampState;
         public TableCell CurrentCell => _currentCell;
         private Transform LampTransform => _lightParent != null ? _lightParent.transform : transform;
@@ -87,6 +88,11 @@ namespace Game {
 
         private void Update()
         {
+            if (!_hasInitializedPlacement && lampState > 0)
+            {
+                InitializeInitialPlacement();
+            }
+
 #if ENABLE_INPUT_SYSTEM
             var mouse = Mouse.current;
             if (mouse != null)
@@ -124,6 +130,11 @@ namespace Game {
 
         private void UpdateLamp()
         {
+            if (!_hasInitializedPlacement && lampState > 0)
+            {
+                InitializeInitialPlacement();
+            }
+
             switch (lampState)
             {
                 case 1: // Mode 1
@@ -381,6 +392,33 @@ namespace Game {
             {
                 _joystickDefaultLocalRotation = _joystick.transform.localRotation;
             }
+        }
+
+        private void InitializeInitialPlacement()
+        {
+            TableGrid grid = Grid;
+            if (grid == null || grid.Cells.Count == 0)
+            {
+                return;
+            }
+
+            TableCell firstCell = grid.Cells[0];
+            if (firstCell == null)
+            {
+                return;
+            }
+
+            if (!grid.TryPlace(firstCell, LampContent))
+            {
+                if (firstCell.Content != LampContent)
+                {
+                    return;
+                }
+            }
+
+            _currentCell = firstCell;
+            MoveLampToCell(firstCell);
+            _hasInitializedPlacement = true;
         }
     }
 }
