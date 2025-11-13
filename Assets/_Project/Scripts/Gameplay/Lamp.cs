@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -40,8 +41,11 @@ namespace Game {
         private Quaternion _joystickDefaultLocalRotation = Quaternion.identity;
         private TableGrid _gridCache;
         private bool _hasInitializedPlacement;
+        private readonly List<TableCell> _coveredCells = new List<TableCell>();
+
         public int LampState => lampState;
         public TableCell CurrentCell => _currentCell;
+        public IReadOnlyList<TableCell> CoveredCells => _coveredCells;
         private Transform LampTransform => _lightParent != null ? _lightParent.transform : transform;
         private GameObject LampContent => _lightParent != null ? _lightParent : gameObject;
         private TableGrid Grid
@@ -151,11 +155,14 @@ namespace Game {
                     _lampLight.enabled = false;
                     break;
             }
+
+            UpdateCoveredCells();
         }
 
         public void SetCurrentCell(TableCell cell)
         {
             _currentCell = cell;
+            UpdateCoveredCells();
         }
 
         private void TryHandleButtonPress(Vector2 screenPoint)
@@ -352,6 +359,7 @@ namespace Game {
             }
 
             MoveLampToCell(targetCell);
+            UpdateCoveredCells();
             return true;
         }
 
@@ -384,6 +392,7 @@ namespace Game {
             }
 
             MoveLampToCell(_currentCell);
+            UpdateCoveredCells();
         }
 
         private void CacheJoystickDefaults()
@@ -419,6 +428,56 @@ namespace Game {
             _currentCell = firstCell;
             MoveLampToCell(firstCell);
             _hasInitializedPlacement = true;
+            UpdateCoveredCells();
+        }
+
+        private void UpdateCoveredCells()
+        {
+            _coveredCells.Clear();
+
+            if (lampState == 0 || _currentCell == null)
+            {
+                return;
+            }
+
+            TableGrid grid = Grid;
+            if (grid == null)
+            {
+                _coveredCells.Add(_currentCell);
+                return;
+            }
+
+            if (lampState == 1)
+            {
+                AddCoveredCell(_currentCell);
+                return;
+            }
+
+            if (lampState == 2)
+            {
+                Vector2Int origin = _currentCell.GridPosition;
+                for (int y = -1; y <= 1; y++)
+                {
+                    for (int x = -1; x <= 1; x++)
+                    {
+                        Vector2Int coords = origin + new Vector2Int(x, y);
+                        if (grid.TryGetCell(coords, out TableCell cell))
+                        {
+                            AddCoveredCell(cell);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AddCoveredCell(TableCell cell)
+        {
+            if (cell == null || _coveredCells.Contains(cell))
+            {
+                return;
+            }
+
+            _coveredCells.Add(cell);
         }
     }
 }

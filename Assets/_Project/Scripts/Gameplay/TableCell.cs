@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Game
 {
+    [System.Serializable]
     public class TableCell : MonoBehaviour
     {
         private Vector2Int _gridPosition;
