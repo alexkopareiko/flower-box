@@ -24,6 +24,8 @@ namespace Game {
         [SerializeField, Range(0.05f, 0.9f)] private float _joystickDeadZone = 0.35f;
         [SerializeField] private float _joystickTiltAngle = 12f;
         [SerializeField] private float _joystickTiltSpeed = 12f;
+        [SerializeField] private bool _enableKeyboardAndGamepadInput = true;
+        [SerializeField, Min(25f)] private float _joystickDragPixelsForFullTilt = 250f;
 
         [Header("Flicker Settings")]
         [SerializeField] private SpotAngle _spotAngleMode1;
@@ -43,6 +45,9 @@ namespace Game {
         private bool _hasInitializedPlacement;
         private readonly List<TableCell> _coveredCells = new List<TableCell>();
         private bool _isInitialized = false;
+        private bool _isDraggingJoystick;
+        private Vector2 _joystickDragOrigin;
+        private Vector2 _joystickDragInput;
 
         public int LampState => lampState;
         public TableCell CurrentCell => _currentCell;
@@ -109,25 +114,49 @@ namespace Game {
             var mouse = Mouse.current;
             if (mouse != null)
             {
+                Vector2 mousePosition = mouse.position.ReadValue();
                 if (mouse.leftButton.wasPressedThisFrame)
                 {
-                    TryHandleButtonPress(mouse.position.ReadValue());
+                    TryHandleButtonPress(mousePosition);
+                    TryStartJoystickDrag(mousePosition);
+                }
+
+                if (_isDraggingJoystick)
+                {
+                    UpdateJoystickDrag(mousePosition);
                 }
 
                 if (_buttonHeld && mouse.leftButton.wasReleasedThisFrame)
                 {
                     ReleaseButton();
                 }
+
+                if (_isDraggingJoystick && mouse.leftButton.wasReleasedThisFrame)
+                {
+                    EndJoystickDrag();
+                }
             }
 #else
             if (Input.GetMouseButtonDown(0))
             {
-                TryHandleButtonPress(Input.mousePosition);
+                Vector2 mousePosition = Input.mousePosition;
+                TryHandleButtonPress(mousePosition);
+                TryStartJoystickDrag(mousePosition);
+            }
+
+            if (_isDraggingJoystick)
+            {
+                UpdateJoystickDrag(Input.mousePosition);
             }
 
             if (_buttonHeld && Input.GetMouseButtonUp(0))
             {
                 ReleaseButton();
+            }
+
+            if (_isDraggingJoystick && Input.GetMouseButtonUp(0))
+            {
+                EndJoystickDrag();
             }
 #endif
 
@@ -197,6 +226,59 @@ namespace Game {
             }
         }
 
+        private void TryStartJoystickDrag(Vector2 screenPoint)
+        {
+            if (_joystick == null)
+            {
+                return;
+            }
+
+            var cam = Camera.main;
+            if (cam == null)
+            {
+                return;
+            }
+
+            Ray ray = cam.ScreenPointToRay(screenPoint);
+            if (!Physics.Raycast(ray, out RaycastHit hit))
+            {
+                return;
+            }
+
+            if (hit.transform != _joystick.transform && !hit.transform.IsChildOf(_joystick.transform))
+            {
+                return;
+            }
+
+            _isDraggingJoystick = true;
+            _joystickDragOrigin = screenPoint;
+            _joystickDragInput = Vector2.zero;
+            _joystickEngaged = false;
+        }
+
+        private void UpdateJoystickDrag(Vector2 screenPoint)
+        {
+            if (!_isDraggingJoystick)
+            {
+                return;
+            }
+
+            float normalization = Mathf.Max(_joystickDragPixelsForFullTilt, 1f);
+            Vector2 delta = (screenPoint - _joystickDragOrigin) / normalization;
+            _joystickDragInput = Vector2.ClampMagnitude(delta, 1f);
+        }
+
+        private void EndJoystickDrag()
+        {
+            if (!_isDraggingJoystick)
+            {
+                return;
+            }
+
+            _isDraggingJoystick = false;
+            _joystickDragInput = Vector2.zero;
+        }
+
         private void CycleLampMode()
         {
             lampState = (lampState + 1) % 3;
@@ -227,9 +309,15 @@ namespace Game {
 
         private void HandleJoystickInput()
         {
-            Vector2 input = ReadMovementInput();
+            Vector2 input = _enableKeyboardAndGamepadInput ? ReadMovementInput() : Vector2.zero;
+            if (_joystickDragInput.sqrMagnitude > 0f)
+            {
+                input = _joystickDragInput;
+            }
+
             UpdateJoystickVisual(input);
-            if (input.sqrMagnitude < _joystickDeadZone * _joystickDeadZone)
+            float deadZoneSq = _joystickDeadZone * _joystickDeadZone;
+            if (input.sqrMagnitude < deadZoneSq)
             {
                 _joystickEngaged = false;
                 return;
@@ -246,7 +334,7 @@ namespace Game {
             }
             else
             {
-                direction = input.y > 0f ? Vector2Int.up : Vector2Int.down;
+                direction = input.y > 0f ? Vector2Int.down : Vector2Int.up;
             }
 
             if (TryMove(direction))
@@ -320,7 +408,7 @@ namespace Game {
             }
             else
             {
-                float tiltX = -input.y * _joystickTiltAngle;
+                float tiltX = input.y * _joystickTiltAngle;
                 float tiltZ = -input.x * _joystickTiltAngle;
                 targetRotation = _joystickDefaultLocalRotation * Quaternion.Euler(tiltX, 0f, tiltZ);
             }
